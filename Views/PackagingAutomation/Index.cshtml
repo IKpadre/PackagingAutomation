@@ -1,0 +1,166 @@
+﻿@model PackagingAutomationViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>@Html.DisplayNameFor(model => model)</h1>
+
+<p>
+    <a asp-action="ProductionSchedule" class="btn btn-primary">Распределить заказы</a>
+</p>
+
+<h2>@Html.DisplayNameFor(model => model.Orders)</h2>
+
+<button id="moveUp" class="btn btn-primary" disabled>Вверх</button>
+<button id="moveDown" class="btn btn-primary" disabled>Вниз</button>
+
+<table class="table" id="ordersTable">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.First().Distributor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.First().Product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.First().Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.First().Deadline)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 1;
+        }
+        @foreach (var item in Model.Orders)
+        {
+            <tr class="cursor-pointer" data-id="@item.Id">
+                <td>@index</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Distributor.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Deadline)
+                </td>
+            </tr>
+            index++;
+        }
+    </tbody>
+</table>
+<br />
+<h2>@Html.DisplayNameFor(model => model.PackagingMachines)</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PackagingMachines.First().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PackagingMachines.First().Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PackagingMachines.First().Product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PackagingMachines.First().Product.Weight.Performance)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.PackagingMachines)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GetStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Weight.Performance)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        let selectedRow = null;
+
+        $(document).ready(function () {
+            $("#ordersTable tbody tr").click(function () {
+                event.stopPropagation();
+
+                if (selectedRow) {
+                    selectedRow.removeClass("table-active");
+                }
+                selectedRow = $(this);
+                selectedRow.addClass("table-active");
+
+                $("#moveUp, #moveDown").prop("disabled", false);
+            });
+
+            $(document).click(function () {
+                if (selectedRow) {
+                    selectedRow.removeClass("table-active");
+                    selectedRow = null;
+                }
+                $("#moveUp, #moveDown").prop("disabled", true);
+            });
+
+            $("#moveUp").click(function () {
+                event.stopPropagation();
+                if (!selectedRow) return;
+
+                let prevRow = selectedRow.prev();
+                if (prevRow.length === 0) return;
+
+                swapOrders(selectedRow, prevRow);
+            });
+
+            $("#moveDown").click(function () {
+                event.stopPropagation();
+                if (!selectedRow) return;
+
+                let nextRow = selectedRow.next();
+                if (nextRow.length === 0) return;
+
+                swapOrders(nextRow, selectedRow);
+            });
+
+            function swapOrders(row1, row2) {
+                let id1 = row1.data("id");
+                let id2 = row2.data("id");
+
+                $.ajax({
+                    url: "@Url.Action("SwapPriority", "PackagingAutomation")",
+                    type: "POST",
+                    data: { id1: id1, id2: id2 },
+                    success: function () {
+                        row2.before(row1);
+                    },
+                    error: function () {
+                        alert("Error");
+                    }
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,74 @@
+﻿@model PackagingAutomation.Models.Entities.Product
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Изменение</h1>
+
+<h4>@Html.DisplayNameFor(model => model)</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="TrademarkId" class="control-label"></label>
+                <select asp-for="TrademarkId" class="form-control" asp-items="ViewBag.TrademarkId"></select>
+                <span asp-validation-for="TrademarkId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTypeId" class="control-label"></label>
+                <select asp-for="ProductTypeId" class="form-control" asp-items="ViewBag.ProductTypeId"></select>
+                <span asp-validation-for="ProductTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FlavorId" class="control-label"></label>
+                <select asp-for="FlavorId" class="form-control"></select>
+                <span asp-validation-for="FlavorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WeightId" class="control-label"></label>
+                <select asp-for="WeightId" class="form-control" asp-items="ViewBag.WeightId"></select>
+                <span asp-validation-for="WeightId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад к списку</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            function loadFlavors(productTypeId) {
+                if (productTypeId) {
+                    $.getJSON('@Url.Action("GetFlavors", "Products")', { productTypeId: productTypeId }, function (data) {
+                        var flavorDropdown = $("#FlavorId");
+                        flavorDropdown.empty();
+                        $.each(data, function (index, flavor) {
+                            flavorDropdown.append($('<option>', {
+                                value: flavor.id,
+                                text: flavor.name
+                            }));
+                        });
+                    });
+                }
+            }
+
+            $("#ProductTypeId").change(function () {
+                loadFlavors($(this).val());
+            });
+
+            loadFlavors($("#ProductTypeId").val());
+        });
+    </script>
+}

@@ -41,7 +41,7 @@ namespace PackagingAutomation.Models.Entities
         public Weight? Weight { get; set; }
 
         [NotMapped]
-        [DisplayName("Название")]
+        [DisplayName("Продукция")]
         public string Name => $"{Trademark?.Name} - {ProductType?.Name} - {Flavor?.Name} - {Weight?.Grams}";
 
         [NotMapped]

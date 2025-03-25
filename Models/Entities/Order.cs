@@ -36,6 +36,10 @@ namespace PackagingAutomation.Models.Entities
         public uint Priority { get; set; } = 0;
 
         [NotMapped]
+        [DisplayName("Заказ")]
+        public string Name => $"{Distributor?.Name} | {Product?.Name} | {Quantity} шт.";
+
+        [NotMapped]
         [DisplayName("Заказы")]
         public string? Index { get; set; } = null;
     }

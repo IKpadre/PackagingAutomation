@@ -13,6 +13,7 @@ namespace PackagingAutomation.Data
         public DbSet<Flavor> Flavors { get; set; }
         public DbSet<Weight> Weights { get; set; }
         public DbSet<FormatTube> FormatTubes { get; set; }
+        public DbSet<ProductionLine> ProductionLines { get; set; }
         public DbSet<PackagingMachine> PackagingMachines { get; set; }
         public DbSet<ProductionSchedule> ProductionSchedules { get; set; }
         public DbSet<Order> Orders { get; set; }

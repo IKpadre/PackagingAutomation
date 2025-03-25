@@ -24,6 +24,7 @@ namespace PackagingAutomation.Controllers
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.PackagingMachines
+                .Include(p => p.ProductionLine)
                 .Include(p => p.Product).ThenInclude(p => p.Trademark)
                 .Include(p => p.Product).ThenInclude(p => p.ProductType)
                 .Include(p => p.Product).ThenInclude(p => p.Flavor)
@@ -40,6 +41,7 @@ namespace PackagingAutomation.Controllers
             }
 
             var packagingMachine = await _context.PackagingMachines
+                .Include(p => p.ProductionLine)
                 .Include(p => p.Product).ThenInclude(p => p.Trademark)
                 .Include(p => p.Product).ThenInclude(p => p.ProductType)
                 .Include(p => p.Product).ThenInclude(p => p.Flavor)
@@ -62,6 +64,7 @@ namespace PackagingAutomation.Controllers
         public IActionResult Create()
         {
             ViewData["MachineStatus"] = EnumHelper.GetEnumSelectList<MachineStatus>();
+            ViewData["ProductionLineId"] = new SelectList(_context.ProductionLines, "Id", "Name");
             ViewData["ProductId"] = new SelectList(_context.Products
                 .Include(p => p.Trademark)
                 .Include(p => p.ProductType)
@@ -75,7 +78,7 @@ namespace PackagingAutomation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Status,ProductId")] PackagingMachine packagingMachine)
+        public async Task<IActionResult> Create([Bind("Id,Name,ProductionLineId,Status,ProductId")] PackagingMachine packagingMachine)
         {
             if (ModelState.IsValid)
             {
@@ -84,6 +87,7 @@ namespace PackagingAutomation.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["MachineStatus"] = EnumHelper.GetEnumSelectList<MachineStatus>();
+            ViewData["ProductionLineId"] = new SelectList(_context.ProductionLines, "Id", "Name");
             ViewData["ProductId"] = new SelectList(_context.Products
                 .Include(p => p.Trademark)
                 .Include(p => p.ProductType)
@@ -106,6 +110,7 @@ namespace PackagingAutomation.Controllers
                 return NotFound();
             }
             ViewData["MachineStatus"] = EnumHelper.GetEnumSelectList<MachineStatus>();
+            ViewData["ProductionLineId"] = new SelectList(_context.ProductionLines, "Id", "Name");
             ViewData["ProductId"] = new SelectList(_context.Products
                 .Include(p => p.Trademark)
                 .Include(p => p.ProductType)
@@ -119,7 +124,7 @@ namespace PackagingAutomation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Status,ProductId")] PackagingMachine packagingMachine)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ProductionLineId,Status,ProductId")] PackagingMachine packagingMachine)
         {
             if (id != packagingMachine.Id)
             {
@@ -147,6 +152,7 @@ namespace PackagingAutomation.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["MachineStatus"] = EnumHelper.GetEnumSelectList<MachineStatus>();
+            ViewData["ProductionLineId"] = new SelectList(_context.ProductionLines, "Id", "Name");
             ViewData["ProductId"] = new SelectList(_context.Products
                 .Include(p => p.Trademark)
                 .Include(p => p.ProductType)
@@ -164,6 +170,7 @@ namespace PackagingAutomation.Controllers
             }
 
             var packagingMachine = await _context.PackagingMachines
+                .Include(p => p.ProductionLine)
                 .Include(p => p.Product).ThenInclude(p => p.Trademark)
                 .Include(p => p.Product).ThenInclude(p => p.ProductType)
                 .Include(p => p.Product).ThenInclude(p => p.Flavor)

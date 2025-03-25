@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection;
 
 namespace PackagingAutomation.Models.Entities
 {
@@ -31,6 +30,13 @@ namespace PackagingAutomation.Models.Entities
         [Required]
         [DisplayName("Статус")]
         public MachineStatus Status { get; set; } = MachineStatus.Available;
+
+        [Required]
+        [ForeignKey("ProductionLine")]
+        [DisplayName("Производственная линия")]
+        public int ProductionLineId { get; set; }
+        [DisplayName("Производственная линия")]
+        public ProductionLine? ProductionLine { get; set; }
 
         [ForeignKey("Product")]
         [DisplayName("Продукция")]

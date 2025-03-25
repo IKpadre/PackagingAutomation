@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PackagingAutomation.Data;
 
@@ -11,9 +12,11 @@ using PackagingAutomation.Data;
 namespace PackagingAutomation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250308152013_AddedProductionLineModel")]
+    partial class AddedProductionLineModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,7 +128,7 @@ namespace PackagingAutomation.Migrations
                     b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductionLineId")
+                    b.Property<int?>("ProductionLineId")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -318,9 +321,7 @@ namespace PackagingAutomation.Migrations
 
                     b.HasOne("PackagingAutomation.Models.Entities.ProductionLine", "ProductionLine")
                         .WithMany("Machines")
-                        .HasForeignKey("ProductionLineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductionLineId");
 
                     b.Navigation("Product");
 

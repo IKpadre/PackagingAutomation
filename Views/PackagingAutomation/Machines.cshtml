@@ -1,0 +1,72 @@
+﻿@model IEnumerable<PackagingAutomation.Models.Entities.PackagingMachine>
+
+@{
+    ViewData["Title"] = "Machines";
+}
+
+<h1>@Html.DisplayNameFor(model => model.Index)</h1>
+
+<form asp-action="EditStatus" method="post">
+    <button type="submit" class="btn btn-primary mt-3">Сохранить изменения</button>
+    <table class="table" id="machinesTable">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Name)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().ProductionLine)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Status)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Product)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Product.Weight.Performance)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{int i = 0;}
+            @foreach (var item in Model)
+            {
+                <tr class="cursor-pointer">
+                    <td>@(i + 1)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ProductionLine.Name)</td>
+                    <td class="status-cell">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" name="Machines[@i].Id" value="@item.Id" />
+                        <select asp-for ="@item.Status" name="Machines[@i].Status" class="form-control" asp-items="ViewBag.MachineStatus"></select>
+                        <span asp-validation-for="@item.Status" class="text-danger"></span>
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.Product.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Product.Weight.Performance)</td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        let selectedRow = null;
+
+        $(document).ready(function () {
+            $("#machinesTable tbody tr").click(function () {
+                event.stopPropagation();
+
+                if (selectedRow) {
+                    selectedRow.removeClass("table-active");
+                }
+                selectedRow = $(this);
+                selectedRow.addClass("table-active");
+            });
+
+            $(document).click(function () {
+                if (selectedRow) {
+                    selectedRow.removeClass("table-active");
+                    selectedRow = null;
+                }
+            });
+        });
+    </script>
+}

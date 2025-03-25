@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PackagingAutomation.Models.Entities.PackagingMachine>
+﻿@model IEnumerable<PackagingAutomation.Models.Entities.ProductionSchedule>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,19 +13,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Machine)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductionLine)
+                @Html.DisplayNameFor(model => model.Order)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model.StartTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Product)
+                @Html.DisplayNameFor(model => model.EndTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Product.Weight.Performance)
+                @Html.DisplayNameFor(model => model.ReconfigType)
             </th>
             <th></th>
         </tr>
@@ -34,19 +34,19 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Machine.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProductionLine.Name)
+                @Html.DisplayFor(modelItem => item.Order.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.GetStatus)
+                @Html.DisplayFor(modelItem => item.StartTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Product.Name)
+                @Html.DisplayFor(modelItem => item.EndTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Product.Weight.Performance)
+                @Html.DisplayFor(modelItem => item.GetReconfigType)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |

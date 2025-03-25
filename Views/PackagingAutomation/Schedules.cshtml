@@ -1,0 +1,31 @@
+﻿@model IEnumerable<PackagingAutomation.Models.Entities.ProductionSchedule>
+
+@{
+    ViewData["Title"] = "Schedules";
+}
+
+<h1>@Html.DisplayNameFor(model => model.Index)</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Machine)</th>
+            <th>@Html.DisplayNameFor(model => model.Order)</th>
+            <th>@Html.DisplayNameFor(model => model.StartTime)</th>
+            <th>@Html.DisplayNameFor(model => model.EndTime)</th>
+            <th>@Html.DisplayNameFor(model => model.ReconfigType)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Machine.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Order.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.StartTime)</td>
+                <td>@Html.DisplayFor(modelItem => item.EndTime)</td>
+                <td>@Html.DisplayFor(modelItem => item.GetReconfigType)</td>
+            </tr>
+        }
+    </tbody>
+</table>

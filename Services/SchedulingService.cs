@@ -11,8 +11,9 @@ namespace PackagingAutomation.Services
             List<ProductionSchedule> schedule = new();
             DateTime baseTime = DateTime.Now;
 
-            var availableTimes = machines.Where(m => m.Status == MachineStatus.Available).ToDictionary(m => m.Id, m => baseTime);
             var sortedOrders = orders.OrderBy(o => o.Priority).ThenBy(o => o.Deadline).ToList();
+            var availableMachines = machines.Where(m => m.Status == MachineStatus.Available);
+            var availableTimes = availableMachines.ToDictionary(m => m.Id, m => baseTime);
 
             foreach (var order in sortedOrders)
             {
@@ -23,7 +24,7 @@ namespace PackagingAutomation.Services
                 DateTime selectedEndTime = baseTime;
                 int selectedReconfigTime = 0;
 
-                foreach (var machine in machines.Where(m => m.Status == MachineStatus.Available))
+                foreach (var machine in availableMachines)
                 {
                     DateTime availableTime = availableTimes[machine.Id];
                     int reconfigCost = 0;
